@@ -36,9 +36,14 @@ module ActionView
 					
 			unless const_defined? :JQCALLBACKS
 				JQCALLBACKS = Set.new([ :beforeSend, :complete, :error, :success ] + (100..599).to_a)
-				AJAX_OPTIONS = Set.new([ :before, :after, :condition, :url,
-												 :asynchronous, :method, :insertion, :position,
-												 :form, :with, :update, :script ]).merge(JQCALLBACKS)
+				options = Set.new([ :before, :after, :condition, :url,
+														:asynchronous, :method, :insertion, :position,
+														:form, :with, :update, :script ]).merge(JQCALLBACKS)
+				if const_defined? :AJAX_OPTIONS
+					AJAX_OPTIONS.replace(options)
+				else
+					AJAX_OPTIONS = options
+				end
 			end
 			
 			def periodically_call_remote(options = {})
